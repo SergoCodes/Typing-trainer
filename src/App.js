@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import Char from './components/Char'
 import Word from './components/Word'
+import {STATUS_CORRECTED, STATUS_DEFAULT, STATUS_RIGHT, STATUS_WRONG} from './constants'
 
 function App() {
   const text = 'Two before narrow not relied how except moment myself. Dejection assurance mrs led certainly. So gate at no only none open. Betrayed at properly it of graceful on.'
@@ -8,7 +9,7 @@ function App() {
   let i = 0
   const words = text.match(/.*? |.+$/g)
   const [current, setCurrent] = useState(0)
-  const [checks, setChecks] = useState(new Array(chars.length).fill(false))
+  const [statuses, setStatuses] = useState([])
   const textArea = useRef()
   
   useEffect(() => {
@@ -16,20 +17,24 @@ function App() {
   }, [])
   
   function onType(ev) {
-    const check = chars[current] === ev.key
-    const newChecks = [...checks]
+    if (ev.key === 'Shift') {
+      return
+    }
+    const isRight = (chars[current] === ev.key)
+    const newStatuses = [...statuses]
     
-    if (check) {
+    if (isRight) {
+      newStatuses[current] = {isRight: true, isCorrected: newStatuses[current]?.isCorrected || false}
+      setCurrent(current + 1)
+    } else if (ev.key !== 'Backspace') {
+      newStatuses[current] = {isRight: false, isCorrected: true}
       setCurrent(current + 1)
     }
-  
-    newChecks[current] = check
     if (ev.key === 'Backspace' && current > 0) {
       setCurrent(current - 1)
-      newChecks[current - 1] = false
+      newStatuses[current - 1] = {isRight: null, isCorrected: true}
     }
-    
-    setChecks(newChecks)
+    setStatuses(newStatuses)
   }
   
   return (
@@ -38,9 +43,9 @@ function App() {
         words.map(word =>
           <Word key={i - 1000}>
             {
-              [...word].map((char, index) =>
+              [...word].map(char =>
                 <Char
-                  checks={checks}
+                  statuses={statuses}
                   key={i}
                   current={current}
                   index={i++}

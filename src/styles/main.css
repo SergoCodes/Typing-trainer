@@ -63,3 +63,15 @@ html, body {
 .right {
     background: #e7fbd3;
 }
+
+.wrong {
+    background: pink;
+}
+
+.corrected {
+    background: #ffe9b2;
+}
+
+.default {
+    background: transparent;
+}
