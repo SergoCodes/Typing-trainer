@@ -7,6 +7,7 @@
 html, body {
     height: 100%;
     font-family: monospace, sans-serif;
+    user-select: none;
 }
 
 #root {
@@ -26,3 +27,39 @@ html, body {
     align-content: flex-start;
 }
 
+.word {
+    display: flex;
+    margin: 5px 0;
+}
+
+.char {
+    position: relative;
+    min-width: 15px;
+    height: 30px;
+
+    margin: 1px;
+    padding: 1px;
+
+    border-radius: 2px;
+
+    color: #4E4E4E;
+    font-size: 25px;
+}
+
+
+.char.active:after{
+    content: '';
+
+    position: absolute;
+    bottom: 2px;
+    right: 0;
+
+    height: 3px;
+    width: 15px;
+
+    background: #1877F2;
+}
+
+.right {
+    background: #e7fbd3;
+}

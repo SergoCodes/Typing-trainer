@@ -1,8 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react'
 import Char from './components/Char'
+import Word from './components/Word'
 
 function App() {
-  const chars = [...'Two before narrow not relied how except moment myself. Dejection assurance mrs led certainly. So gate at no only none open. Betrayed at properly it of graceful on. Dinner abroad am depart ye turned hearts as me wished. Therefore allowance too perfectly gentleman supposing man his now. Families goodness all eat out bed steepest servants. Explained the incommode sir improving northward immediate eat. Man denoting received you sex possible you. Shew park own loud son door less yet.']
+  const text = 'Two before narrow not relied how except moment myself. Dejection assurance mrs led certainly. So gate at no only none open. Betrayed at properly it of graceful on.'
+  const chars = [...text]
+  let i = 0
+  const words = text.match(/.*? |.+$/g)
   const [current, setCurrent] = useState(0)
   const [checks, setChecks] = useState(new Array(chars.length).fill(false))
   const textArea = useRef()
@@ -31,15 +35,21 @@ function App() {
   return (
     <div ref={textArea} tabIndex={0} onKeyDown={onType} className='text'>
       {
-        chars.map((char, index) =>
-          <Char
-            checks={checks}
-            key={index}
-            current={current}
-            index={index}
-          >
-            {char}
-          </Char>
+        words.map(word =>
+          <Word key={i - 1000}>
+            {
+              [...word].map((char, index) =>
+                <Char
+                  checks={checks}
+                  key={i}
+                  current={current}
+                  index={i++}
+                >
+                  {char}
+                </Char>
+              )
+            }
+          </Word>
         )
       }
     </div>
@@ -47,7 +57,3 @@ function App() {
 }
 
 export default App;
-
-function colorLog(str, color) {
-  console.log(`%c${str}`, `color:${color}; font-weight: bold`)
-}

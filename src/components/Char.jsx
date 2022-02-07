@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
-import classes from './Char.module.css'
 
 const Char = ({index, current, children, checks}) => {
-  const rootClasses = [classes['char']]
-  if (current === index) rootClasses.push(classes.active)
-  if (checks[index]) rootClasses.push(classes.right)
+  const rootClasses = ['char']
+  if (current === index) rootClasses.push('active')
+  if (checks[index]) rootClasses.push('right')
   
   return (
     <span
       className={rootClasses.join(' ')}
       key={index}
+      index={index}
     >
       {children}
     </span>
