@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: monospace, sans-serif;
+}
+
+#root {
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    background: white;
+    min-height: 300px;
+    width: 80%;
+    outline: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
