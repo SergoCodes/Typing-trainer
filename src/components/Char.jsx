@@ -1,18 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
+import {chooseMarkClass} from '../utils'
+import {defaultStatus} from '../constants'
 
 const Char = ({index, current, children, statuses}) => {
-  const rootClasses = ['char']
-  
-  if (current === index) rootClasses.push('active')
-  
-  const {isRight, isCorrected} = statuses[index] || {isRight: null, isCorrected: false}
-  
-  let markClass = 'default'
-  if (isRight && !isCorrected) markClass = 'right'
-  else if (isRight && isCorrected) markClass = 'corrected'
-  else if (isRight === null) markClass = 'default'
-  else if (!isRight) markClass = 'wrong'
-  rootClasses.push(markClass)
+  const rootClasses = current === index ? ['active', 'char'] : ['char']
+  const status = statuses[index] || defaultStatus
+  rootClasses.push(chooseMarkClass(status))
   
   return (
     <span
@@ -25,3 +18,4 @@ const Char = ({index, current, children, statuses}) => {
 };
 
 export default Char;
+
