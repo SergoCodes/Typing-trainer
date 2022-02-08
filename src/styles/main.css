@@ -51,7 +51,7 @@ html, body {
     content: '';
 
     position: absolute;
-    bottom: 2px;
+    bottom: 0px;
     right: 0;
 
     height: 3px;
