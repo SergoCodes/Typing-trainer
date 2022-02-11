@@ -1,6 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 import Char from './components/Char'
 import {defaultStatus} from './constants'
+import {calculateWPM} from './utils'
 
 function App() {
   const text = 'Two before narrow not relied how except moment myself. Dejection assurance mrs led certainly. So gate at no only none open. Betrayed at properly it of graceful on.'
@@ -11,17 +12,37 @@ function App() {
   const [statuses, setStatuses] = useState([])
   const focusDiv = useRef()
   const [wpm, setWpm] = useState(0)
-  const [startedTime, setStartedTime] = useState(null)
+  const [startTime, setStartTime] = useState(null)
+  const [accuracy, setAccuracy] = useState(100)
+  let interval = useRef(null)
   
   useEffect(() => {
     focusDiv.current.focus()
   },[])
   
+  function startCalcTime() {
+    const localStartTime = Date.now()
+    if (!startTime) setStartTime(localStartTime)
+    const interval = setInterval(() => {
+      setCurrent(current => {
+        const currentTime = Date.now()
+        console.log({localStartTime, currentTime, current})
+        setWpm(calculateWPM(localStartTime, currentTime, current))
+        
+        // const count =statuses.filter(elem => elem.isRight).length
+        // console.log(count)
+        return current
+      })
+    }, 1000)
+    return interval
+  }
+  
   function onType(ev) {
+    if (!startTime) interval.current = startCalcTime()
+    if (current >= 20) clearInterval(interval.current)
+    
     const ignoredKeys = ['Shift', 'Tab']
-    if (ignoredKeys.includes(ev.key)) {
-      return
-    }
+    if (ignoredKeys.includes(ev.key)) return
     
     const newStatuses = [...statuses]
     const status = getStatus(ev.key, current)
@@ -51,6 +72,7 @@ function App() {
   }
   
   return (
+    
     <div className='focusDiv' ref={focusDiv} tabIndex={0} onKeyDown={onType}>
       <div  className='text'>
         {
@@ -71,6 +93,11 @@ function App() {
             </span>
           )
         }
+      </div>
+      
+      <div className='info'>
+        <div className="speed-info">Speed(wpm): {wpm}</div>
+        <div className="accuracy-info">Accuracy: {accuracy}%</div>
       </div>
     </div>
     

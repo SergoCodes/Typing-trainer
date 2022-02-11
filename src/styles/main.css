@@ -12,24 +12,25 @@ html, body {
 
 #root {
     min-height: 100%;
+
     display: flex;
     justify-content: center;
     align-items: stretch;
 }
 
 .text {
-    background: white;
-    min-height: 300px;
-    width: 80%;
-    outline: none;
+    width: 40%;
+    padding: 20px;
+
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-start;
+    /*align-content: flex-start;*/
 }
 
 .word {
-    display: flex;
     margin: 5px 0;
+
+    display: flex;
 }
 
 .char {
@@ -81,4 +82,10 @@ html, body {
     justify-content: center;
     align-items: center;
     outline: none;
+    flex-direction: column;
+}
+
+.info {
+    font-size: 25px;
+    color: grey
 }
