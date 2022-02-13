@@ -1,51 +1,53 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import Char from './components/Char'
-import {defaultStatus} from './constants'
-import {calculateWPM} from './utils'
+import {ignoredKeys} from './constants'
+import {calculateWPM, getStatus} from './utils'
 
 function App() {
   const text = 'Two before narrow not relied how except moment myself. Dejection assurance mrs led certainly. So gate at no only none open. Betrayed at properly it of graceful on.'
   const chars = [...text]
   let i = 0
-  const words = text.match(/.*? |.+$/g)
+  const words = text.match(/.*? |.+$/g) // words with whitespaces
+  
   const [current, setCurrent] = useState(0)
   const [statuses, setStatuses] = useState([])
-  const focusDiv = useRef()
   const [wpm, setWpm] = useState(0)
   const [startTime, setStartTime] = useState(null)
   const [accuracy, setAccuracy] = useState(100)
-  let interval = useRef(null)
+  const focusDiv = useRef()
+  let statInterval = useRef()
   
   useEffect(() => {
     focusDiv.current.focus()
-  },[])
+  }, [])
   
-  function startCalcTime() {
-    const localStartTime = Date.now()
-    if (!startTime) setStartTime(localStartTime)
-    const interval = setInterval(() => {
+  function startStatistics() {
+    const startTime = Date.now()
+    setStartTime(startTime)
+    
+    return setInterval(() => {
       setCurrent(current => {
         const currentTime = Date.now()
-        console.log({localStartTime, currentTime, current})
-        setWpm(calculateWPM(localStartTime, currentTime, current))
-        
-        // const count =statuses.filter(elem => elem.isRight).length
-        // console.log(count)
+        setWpm(calculateWPM(startTime, currentTime, current))
         return current
       })
-    }, 1000)
-    return interval
+      
+      setStatuses(statuses => {
+        const allCount = statuses.filter(st => st.isRight !== null).length
+        const rightCount = statuses.filter(st => st.isRight).length
+        setAccuracy(Math.round((rightCount / allCount) * 100))
+        return statuses
+      })
+    }, 1500)
   }
   
   function onType(ev) {
-    if (!startTime) interval.current = startCalcTime()
-    if (current >= 20) clearInterval(interval.current)
-    
-    const ignoredKeys = ['Shift', 'Tab']
+    if (!startTime) statInterval.current = startStatistics()
+    if (current >= text.length - 1) clearInterval(statInterval.current)
     if (ignoredKeys.includes(ev.key)) return
     
+    const status = getStatus(ev.key, current, statuses, chars)
     const newStatuses = [...statuses]
-    const status = getStatus(ev.key, current)
     
     if (status.isRight === null) {
       newStatuses[current - 1] = status
@@ -54,27 +56,13 @@ function App() {
       newStatuses[current] = status
       setCurrent(current + 1)
     }
-    
     setStatuses(newStatuses)
-  }
-  
-  function getStatus(key, current) {
-    let isRight = (chars[current] === key)
-    let isCorrected
-    if (key === 'Backspace' && current > 0) {
-      isCorrected = statuses[current - 1]?.isCorrected === true
-      isRight = null
-    }
-    else if (isRight) isCorrected = statuses[current]?.isCorrected === true
-    else isCorrected = true
-    
-    return {isRight, isCorrected}
   }
   
   return (
     
     <div className='focusDiv' ref={focusDiv} tabIndex={0} onKeyDown={onType}>
-      <div  className='text'>
+      <div className='text'>
         {
           words.map(word =>
             <span className='word' key={i - 1000}>
@@ -100,7 +88,7 @@ function App() {
         <div className="accuracy-info">Accuracy: {accuracy}%</div>
       </div>
     </div>
-    
+  
   );
 }
 

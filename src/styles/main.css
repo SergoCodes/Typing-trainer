@@ -86,6 +86,10 @@ html, body {
 }
 
 .info {
-    font-size: 25px;
+    width: 40%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
     color: grey
 }

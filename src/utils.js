@@ -14,3 +14,16 @@ export function calculateWPM(startTime, currentTime, current) {
   const wpm = Math.round((current / 5) / (seconds / 60))
   return wpm
 }
+
+export function getStatus(key, current, statuses, chars) {
+  let isRight = (chars[current] === key)
+  let isCorrected
+  if (key === 'Backspace' && current > 0) {
+    isCorrected = statuses[current - 1]?.isCorrected === true
+    isRight = null
+  }
+  else if (isRight) isCorrected = statuses[current]?.isCorrected === true
+  else isCorrected = true
+  
+  return {isRight, isCorrected}
+}
