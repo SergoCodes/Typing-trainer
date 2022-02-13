@@ -59,6 +59,10 @@ function App() {
     setStatuses(newStatuses)
   }
   
+  function showModal() {
+  
+  }
+  
   return (
     
     <div className='focusDiv' ref={focusDiv} tabIndex={0} onKeyDown={onType}>
@@ -85,7 +89,7 @@ function App() {
       
       <div className='info'>
         <div className="speed-info">Speed(wpm): {wpm}</div>
-        <div className="accuracy-info">Accuracy: {accuracy}%</div>
+        <div className="accuracy-info">Accuracy: {isNaN(accuracy)? 0 : accuracy}%</div>
       </div>
     </div>
   
