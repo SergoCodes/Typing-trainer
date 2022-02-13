@@ -1,5 +1,5 @@
-#Typing trainer 
-like TypingClub.com
+# Typing trainer 
+Like TypingClub.com
 
 Demo: 
 
